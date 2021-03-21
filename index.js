@@ -9,13 +9,13 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-require('./db/index')
-
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/", router)
+
+require('./db/index');
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
