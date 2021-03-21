@@ -1,5 +1,5 @@
 const { Sequelize } = require('sequelize');
-const dbConfig = require('../config/db')
+const dbConfig = require('../../config/db')
 const sequelize = new Sequelize(dbConfig)
 
 sequelize.authenticate().then(async () => {

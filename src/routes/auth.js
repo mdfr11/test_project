@@ -1,7 +1,7 @@
 const express = require('express');
-const { User } = require('../db/models');
-const { comparePassword } = require('../utils/passwordEncryption');
-const tokenUtils = require("../utils/jwt");
+const { User } = require('../database/models');
+const { comparePassword } = require('../../utils/passwordEncryption');
+const tokenUtils = require("../../utils/jwt");
 const { authMiddleware } = require('../middlewares/index');
 
 const authRouter = express.Router();

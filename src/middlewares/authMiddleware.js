@@ -1,4 +1,4 @@
-const tokenUtils = require("../utils/jwt");
+const tokenUtils = require("../../utils/jwt");
 
 module.exports = async (req, res, next) => {
   let token;

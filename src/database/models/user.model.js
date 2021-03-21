@@ -1,4 +1,4 @@
-const { encryptPassword } = require('../../utils/passwordEncryption.js')
+const { encryptPassword } = require('../../../utils/passwordEncryption.js')
 const Sequelize = require('sequelize');
 const db = require('../index');
 

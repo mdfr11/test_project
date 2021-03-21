@@ -3,8 +3,8 @@ require('dotenv').config();
 const express = require('express');
 const path = require("path");
 const cors = require("cors");
-const router = require("./routes/index");
-const { errorMiddleware } = require('./middlewares');
+const router = require("./src/routes/index");
+const { errorMiddleware } = require('./src/middlewares');
 
 const PORT = process.env.PORT || 3000;
 
@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", router)
 app.use(errorMiddleware);
 
-require('./db/index');
+require('./src/database/index');
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
