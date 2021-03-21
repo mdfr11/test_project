@@ -7,7 +7,7 @@ sequelize.authenticate().then(async () => {
     await sequelize.sync({ force: dbConfig.force });
     console.log('DB recreated.');
   } else {
-    await sequelize.sync();
+    await sequelize.sync({ force: false });
     console.log('Connection has been established successfully.');
   }
 }).catch(error => {
