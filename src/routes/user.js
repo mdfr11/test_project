@@ -5,15 +5,12 @@ const { authMiddleware } = require('../middlewares');
 const authRouter = express.Router();
 
 authRouter.get('/info', authMiddleware, async (req, res, next) => {
-  const { id } = req.user
-  const foundUser = await User.findByPk(id)
-  if (!foundUser) {
-    let err = new Error(`User not found`);
-    err.statusCode = 400;
-    return next(err);
+  try {
+    const result = await authService.logout(req.user)
+    res.send(result)
+  } catch (error) {
+    return next(error);
   }
-
-  res.send({ id: foundUser.id })
 });
 
 module.exports = authRouter;

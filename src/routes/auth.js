@@ -1,84 +1,43 @@
-const express = require('express');
-const { User } = require('../database/models');
-const { comparePassword } = require('../../utils/passwordEncryption');
-const tokenUtils = require("../../utils/jwt");
-const { authMiddleware } = require('../middlewares/index');
+const express = require("express");
+const { authMiddleware } = require("../middlewares/index");
+const { AuthService } = require("../services/index");
 
 const authRouter = express.Router();
 
-authRouter.post('/signup', async (req, res, next) => {
-  const { id, password } = req.body;
-  const foundUser = await User.findByPk(id)
-  if (foundUser) {
-    let err = new Error(`User already exists`);
-    err.statusCode = 409;
-    return next(err);
+authRouter.post("/signup", async (req, res, next) => {
+  try {
+    const result = await AuthService.registration(req.body);
+    res.send(result);
+  } catch (error) {
+    return next(error);
   }
-
-  const tokens = {
-    accessToken: tokenUtils.generateAccessToken({ id }),
-    refreshToken: tokenUtils.generateRefreshToken({ id })
-  }
-
-  await User.create({ id, password, refreshToken: tokens.refreshToken })
-  res.send(tokens)
 });
 
-authRouter.post('/signin', async (req, res, next) => {
-  const { id, password } = req.body;
-
-  const foundUser = await User.findByPk(id);
-  if (!foundUser) {
-    let err = new Error(`User not found`);
-    err.statusCode = 400;
-    return next(err);
-  };
-
-  const comparedPassword = comparePassword(password, foundUser.password);
-  if (!comparedPassword) {
-    let err = new Error(`Wrong password`);
-    err.statusCode = 400;
-    return next(err);
-  };
-
-  res.send({
-    accessToken: tokenUtils.generateAccessToken({ id })
-  })
-})
-
-authRouter.post('/signin/new_token', async (req, res, next) => {
-  const { refreshToken } = req.body;
-  let userId
-
+authRouter.post("/signin", async (req, res, next) => {
   try {
-    const verifiedToken = tokenUtils.verify(refreshToken);
-    userId = verifiedToken.data.id;
+    const result = await AuthService.login(req.body);
+    res.send(result);
   } catch (error) {
-    let err = new Error(error.message);
-    err.statusCode = 400;
-    return next(err);
+    return next(error);
   }
+});
 
-  res.send({
-    accessToken: tokenUtils.generateAccessToken({ id: userId })
-  })
-})
-
-authRouter.get('/logout', authMiddleware, async (req, res, next) => {
-  const { id } = req.user
-  const foundUser = await User.findByPk(id)
-  if (!foundUser) {
-    let err = new Error(`User not found`);
-    err.statusCode = 400;
-    return next(err);
+authRouter.post("/signin/new_token", async (req, res, next) => {
+  try {
+    const result = await AuthService.updateToken(req.body);
+    res.send(result);
+  } catch (error) {
+    return next(error);
   }
+});
 
-  const refreshToken = tokenUtils.generateRefreshToken({ id })
-  
-  foundUser.refreshToken = refreshToken
-  foundUser.save()
-
-  res.send({ refreshToken })
+authRouter.get("/logout", authMiddleware, async (req, res, next) => {
+  try {
+    const result = await AuthService.logout(req.user);
+    res.send(result);
+  } catch (error) {
+    return next(error);
+  }
 });
 
 module.exports = authRouter;
