@@ -16,6 +16,10 @@ User.init(
     password: {
       type: Sequelize.STRING,
       allowNull: false
+    },
+    refreshToken: {
+      type: Sequelize.STRING,
+      allowNull: false
     }
   },
   {

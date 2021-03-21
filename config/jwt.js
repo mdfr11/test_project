@@ -1,4 +1,5 @@
 module.exports = {
   secret: process.env.SECRET,
-  expiresIn: process.env.EXPIRES_IN
+  accessExpiresIn: process.env.ACCESS_EXPIRES_IN,
+  refreshExpiresIn: process.env.REFRESH_EXPIRES_IN
 };

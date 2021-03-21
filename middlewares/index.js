@@ -1,3 +1,4 @@
 module.exports = {
-  errorMiddleware: require('./errorMiddleware')
+  errorMiddleware: require('./errorMiddleware'),
+  authMiddleware: require('./authMiddleware')
 };
