@@ -20,9 +20,7 @@ const registration = async (body) => {
   return tokens;
 };
 
-const login = async (body) => {
-  const { id, password } = body;
-
+const login = async (id, password) => {
   const foundUser = await User.findByPk(id);
   if (!foundUser) {
     let err = new Error(`User not found`);
@@ -42,8 +40,7 @@ const login = async (body) => {
   };
 };
 
-const updateToken = async (body) => {
-  const { refreshToken } = body;
+const updateToken = async (refreshToken) => {
   let userId;
 
   try {
@@ -55,13 +52,25 @@ const updateToken = async (body) => {
     throw err;
   }
 
+  const foundUser = await User.findByPk(id);
+  if (!foundUser) {
+    let err = new Error(`User not found`);
+    err.statusCode = 400;
+    throw err;
+  }
+
+  if (refreshToken !== foundUser.refreshToken) {
+    let err = new Error(`Refresh token not found`);
+    err.statusCode = 400;
+    throw err;
+  }
+
   return {
     accessToken: tokenUtils.generateAccessToken({ id: userId }),
   };
 };
 
-const logout = async (body) => {
-  const { id } = body;
+const logout = async (id) => {
   const foundUser = await User.findByPk(id);
   if (!foundUser) {
     let err = new Error(`User not found`);

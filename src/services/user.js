@@ -1,7 +1,6 @@
 const { User } = require('../database/models');
 
-const getInfo = async (body) => {
-  const { id } = body
+const getInfo = async (id) => {
   const foundUser = await User.findByPk(id)
   if (!foundUser) {
     let err = new Error(`User not found`);

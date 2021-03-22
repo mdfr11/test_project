@@ -1,12 +1,11 @@
 const express = require('express');
-const { User } = require('../database/models');
-const { authMiddleware } = require('../middlewares');
+const { UserService } = require('../services');
 
 const authRouter = express.Router();
 
 authRouter.get('/info', authMiddleware, async (req, res, next) => {
   try {
-    const result = await authService.logout(req.user)
+    const result = await UserService.getInfo(req.user.id)
     res.send(result)
   } catch (error) {
     return next(error);
